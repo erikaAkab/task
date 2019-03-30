@@ -10,4 +10,7 @@
     <string name="email">Email</string>
     <string name="senha">Senha</string>
     <string name="cadastrar">Cadastrar</string>
+    <string name="informe_todos_campos">Informe todos os campos!</string>
+    <string name="erro_inesperado">Algo de errado aconteceu. Tente novamente!</string>
+    <string name="email_em_uso">Email já esta em uso!</string>
 </resources>
