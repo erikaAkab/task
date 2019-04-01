@@ -10,12 +10,16 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import com.example.task.R
+import com.example.task.business.PriorityBusiness
 import com.example.task.business.UserBusiness
+import com.example.task.constants.TaskConstants
+import com.example.task.repository.PriorityCacheConstants
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var mUserBusiness: UserBusiness
+    private lateinit var mPriorityBusiness: PriorityBusiness
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,12 +37,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         nav_view.setNavigationItemSelectedListener(this)
 
         mUserBusiness = UserBusiness(this)
+        mPriorityBusiness = PriorityBusiness(this)
+
+        loadPriorityCache()
 
         startDefaultFragment()
     }
 
+    private fun loadPriorityCache() {
+        PriorityCacheConstants.setCache(mPriorityBusiness.getList())
+    }
+
     private fun startDefaultFragment() {
-        val fragment: Fragment = TaskListFragment.newInstance()
+        val fragment: Fragment = TaskListFragment.newInstance(TaskConstants.TASKFILTER.COMPLETE)
         supportFragmentManager.beginTransaction().replace(R.id.frameContent, fragment).commit()
     }
 
@@ -55,10 +66,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_done -> {
-                startDefaultFragment()
+                val fragment = TaskListFragment.newInstance(TaskConstants.TASKFILTER.COMPLETE)
+                supportFragmentManager.beginTransaction().replace(R.id.frameContent, fragment).commit()
             }
             R.id.nav_todo -> {
-                startDefaultFragment()
+                val fragment = TaskListFragment.newInstance(TaskConstants.TASKFILTER.TODO)
+                supportFragmentManager.beginTransaction().replace(R.id.frameContent, fragment).commit()
             }
             R.id.nav_logout -> {
                 mUserBusiness.logout()

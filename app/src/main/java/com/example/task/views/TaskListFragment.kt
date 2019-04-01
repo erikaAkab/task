@@ -4,11 +4,18 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
 import com.example.task.R
+import com.example.task.adapter.TaskListAdapter
+import com.example.task.business.TaskBusiness
+import com.example.task.constants.TaskConstants
+import com.example.task.entities.OnTaskListFragmentInteractionListener
+import com.example.task.util.SecurityPreferences
 
 /**
  * A simple [Fragment] subclass.
@@ -20,18 +27,30 @@ import com.example.task.R
  *
  */
 class TaskListFragment : Fragment() {
+    private lateinit var mRecyclerTaskList: RecyclerView
+    private lateinit var mTaskBusiness: TaskBusiness
+    private lateinit var mSecurityPreferences: SecurityPreferences
+    private lateinit var mListener: OnTaskListFragmentInteractionListener
+    private var mTaskFilter: Int = 0
+
     companion object {
-        fun newInstance(): TaskListFragment {
-            return TaskListFragment()
+        fun newInstance(taskFilter: Int): TaskListFragment {
+            val args: Bundle = Bundle()
+            args.putInt(TaskConstants.TASKFILTER.KEY, taskFilter)
+
+            val fragment = TaskListFragment()
+            fragment.arguments = args
+
+            return fragment
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        arguments?.let {
-//            param1 = it.getString(ARG_PARAM1)
-//            param2 = it.getString(ARG_PARAM2)
-//        }
+
+        arguments?.let {
+            mTaskFilter = it.getInt(TaskConstants.TASKFILTER.KEY)
+        }
     }
 
     override fun onCreateView(
@@ -39,11 +58,43 @@ class TaskListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_task_list, container, false)
+        mTaskBusiness = TaskBusiness(rootView.context)
+        mSecurityPreferences = SecurityPreferences(rootView.context)
+        mListener = object : OnTaskListFragmentInteractionListener {
+            override fun onListClick(taskId: Int) {
+                val bundle: Bundle = Bundle()
+                bundle.putInt(TaskConstants.BUNDLE.TASKID, taskId)
+
+                val intent = Intent(rootView.context, TaskFormActivity::class.java)
+                intent.putExtras(bundle)
+
+                startActivity(intent)
+            }
+        }
 
         rootView.findViewById<FloatingActionButton>(R.id.floatAddTask).setOnClickListener {
             startActivity(Intent(rootView.context, TaskFormActivity::class.java))
         }
 
+        // Criando recycler view
+        // 1 Obter o elemento
+        mRecyclerTaskList = rootView.findViewById(R.id.recyclerTaskList)
+
+        // 2 Definir um adapter com os itens de listagem
+        mRecyclerTaskList.adapter = TaskListAdapter(mutableListOf(), mListener)
+
+        // 3 Definir um layout
+        mRecyclerTaskList.layoutManager = LinearLayoutManager(rootView.context)
+
         return rootView
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadTasks()
+    }
+
+    private fun loadTasks() {
+        mRecyclerTaskList.adapter = TaskListAdapter(mTaskBusiness.getList(mTaskFilter), mListener)
     }
 }

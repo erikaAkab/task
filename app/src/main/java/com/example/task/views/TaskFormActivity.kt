@@ -25,6 +25,7 @@ class TaskFormActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
 
     private var mLstPrioritiesEntity: MutableList<PriorityEntity> = mutableListOf()
     private var mLstPrioritiesId: MutableList<Int> = mutableListOf()
+    private var mTaskId: Int = 0
 
     private val mSimpleDateFormat: SimpleDateFormat = SimpleDateFormat("dd/MM/yyyy")
 
@@ -39,6 +40,8 @@ class TaskFormActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
         setListeners()
 
         loadPriorities()
+
+        loadDataFromActivity()
     }
 
     override fun onDateSet(view: DatePicker, year: Int, month: Int, dayOfMonth: Int) {
@@ -61,12 +64,49 @@ class TaskFormActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
                 val dueDate = buttonDate.text.toString()
                 val userId = mSecurityPreferences.getStoredString(TaskConstants.KEY.USER_ID).toInt()
 
-                val taskEntity = TaskEntity(0, userId, priorityId, description, dueDate, complete)
-                mTaskBusiness.insert(taskEntity)
+                val taskEntity = TaskEntity(mTaskId, userId, priorityId, description, dueDate, complete)
+
+                if(mTaskId == 0) {
+                    mTaskBusiness.insert(taskEntity)
+                    Toast.makeText(this, getString(R.string.tarefa_incluida_sucesso), Toast.LENGTH_LONG).show()
+                } else {
+                    mTaskBusiness.update(taskEntity)
+                    Toast.makeText(this, getString(R.string.tarefa_alterada_sucesso), Toast.LENGTH_LONG).show()
+                }
+
+                finish()
             } catch (e: Exception) {
                 Toast.makeText(this, getString(R.string.erro_inesperado), Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    private fun loadDataFromActivity() {
+        val bundle = intent.extras
+
+        if (bundle != null) {
+            mTaskId = bundle.getInt(TaskConstants.BUNDLE.TASKID)
+            val task = mTaskBusiness.get(mTaskId)
+
+            if (task != null) {
+                editDescription.setText(task.description)
+                buttonDate.text = task.dueDate
+                checkboxComplete.isChecked = task.complete
+                spinnerPriority.setSelection(getIndex(task.priorityId))
+            }
+        }
+    }
+
+    private fun getIndex(id: Int): Int {
+        var index = 0
+        for (i in 0..mLstPrioritiesEntity.size) {
+            if (mLstPrioritiesEntity[i].id == id) {
+                index = i
+                break
+            }
+        }
+
+        return index
     }
 
     private fun openDatePickerDialog() {
