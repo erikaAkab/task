@@ -1,6 +1,8 @@
 package com.example.task.views
 
+import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +20,12 @@ import com.example.task.R
  *
  */
 class TaskListFragment : Fragment() {
+    companion object {
+        fun newInstance(): TaskListFragment {
+            return TaskListFragment()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        arguments?.let {
@@ -30,12 +38,12 @@ class TaskListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_task_list, container, false)
-    }
+        val rootView = inflater.inflate(R.layout.fragment_task_list, container, false)
 
-    companion object {
-        fun newInstance(): TaskListFragment {
-            return TaskListFragment()
+        rootView.findViewById<FloatingActionButton>(R.id.floatAddTask).setOnClickListener {
+            startActivity(Intent(rootView.context, TaskFormActivity::class.java))
         }
+
+        return rootView
     }
 }
