@@ -1,5 +1,6 @@
 package com.example.task.views
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -34,6 +35,9 @@ class RegisterActivity : AppCompatActivity() {
             val password = editPassword.text.toString()
 
             mUserBusiness.insert(name, email, password)
+
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
         } catch (e: ValidationException) {
             Toast.makeText(this, e.message, Toast.LENGTH_LONG).show()
         } catch (e: Exception) {

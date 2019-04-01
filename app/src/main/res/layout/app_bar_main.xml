@@ -21,7 +21,12 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <!--Conteúdo da aplicação-->
+    <FrameLayout
+            android:id="@+id/frameContent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    ></FrameLayout>
 
     <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
