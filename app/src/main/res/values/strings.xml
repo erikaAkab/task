@@ -25,4 +25,5 @@
     <string name="prioridade">Prioridade</string>
     <string name="tarefa_incluida_sucesso">Tarefa incluida com sucesso!</string>
     <string name="tarefa_alterada_sucesso">Tarefa alterada com sucesso!</string>
+    <string name="tarefa_removida_sucesso">Tarefa removida com sucesso</string>
 </resources>

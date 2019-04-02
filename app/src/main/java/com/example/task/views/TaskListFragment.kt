@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 
 import com.example.task.R
 import com.example.task.adapter.TaskListAdapter
@@ -69,6 +70,22 @@ class TaskListFragment : Fragment() {
                 intent.putExtras(bundle)
 
                 startActivity(intent)
+            }
+
+            override fun onDeleteClick(taskId: Int) {
+                mTaskBusiness.delete(taskId)
+                loadTasks()
+                Toast.makeText(rootView.context, getString(R.string.tarefa_removida_sucesso), Toast.LENGTH_LONG).show()
+            }
+
+            override fun onCompleteClick(taskId: Int) {
+                mTaskBusiness.complete(taskId, true)
+                loadTasks()
+            }
+
+            override fun onUncompleteClick(taskId: Int) {
+                mTaskBusiness.complete(taskId, false)
+                loadTasks()
             }
         }
 

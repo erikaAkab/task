@@ -20,4 +20,15 @@ class TaskBusiness(context: Context) {
     fun insert(taskEntity: TaskEntity) = mTaskRepository.insert(taskEntity)
 
     fun update(taskEntity: TaskEntity) = mTaskRepository.update(taskEntity)
+
+    fun delete(taskId: Int) = mTaskRepository.delete(taskId)
+
+    fun complete(taskId: Int, complete: Boolean) {
+        val task = mTaskRepository.get(taskId)
+
+        if (task != null) {
+            task.complete = complete
+            mTaskRepository.update(task)
+        }
+    }
 }
