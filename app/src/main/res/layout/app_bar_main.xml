@@ -8,7 +8,7 @@
         tools:context=".views.MainActivity">
 
     <android.support.design.widget.AppBarLayout
-            android:layout_height="wrap_content"
+            android:layout_height="130dp"
             android:layout_width="match_parent"
             android:theme="@style/AppTheme.AppBarOverlay">
 
@@ -19,6 +19,18 @@
                 android:background="?attr/colorPrimary"
                 app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
+        <TextView android:id="@+id/textHello"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="Olá, Usuário!"
+                  android:textSize="20sp"
+                  android:paddingLeft="80dp"/>
+
+        <TextView android:id="@+id/textDateDescription"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:paddingLeft="80dp"
+                  android:text="Segunda, 20 de Janeiro"/>
     </android.support.design.widget.AppBarLayout>
 
     <FrameLayout

@@ -93,6 +93,8 @@ class TaskFormActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
                 buttonDate.text = task.dueDate
                 checkboxComplete.isChecked = task.complete
                 spinnerPriority.setSelection(getIndex(task.priorityId))
+
+                buttonSave.text = getString(R.string.atualizar_tarefa)
             }
         }
     }
