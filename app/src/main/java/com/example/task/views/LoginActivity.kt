@@ -37,5 +37,9 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this, getString(R.string.usuario_senha_incorretos), Toast.LENGTH_LONG).show()
             }
         }
+
+        textRegister.setOnClickListener {
+            startActivity(Intent(this, RegisterActivity::class.java))
+        }
     }
 }
